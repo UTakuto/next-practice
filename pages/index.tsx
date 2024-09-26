@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const Home = () => {
+const Home = () => (
     <div>
         <h1>Welcome to Next.js with TypeScript</h1>
         {/* about page link */}
@@ -9,8 +9,8 @@ const Home = () => {
         </Link> */}
 
         {/* posts page link */}
-        <Link href="/posts/1"></Link>
-    </div>;
-};
+        <Link href="/posts/1">{/* <a>Go to post 1</a> */}</Link>
+    </div>
+);
 
 export default Home;
