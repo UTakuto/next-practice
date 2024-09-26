@@ -1,3 +1,4 @@
+import Button from "../components/Button";
 import Link from "next/link";
 
 const Home = () => (
@@ -10,6 +11,8 @@ const Home = () => (
 
         {/* posts page link */}
         <Link href="/posts/1">{/* <a>Go to post 1</a> */}</Link>
+
+        <Button />
     </div>
 );
 
