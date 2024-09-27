@@ -26,6 +26,22 @@ export const getServerSideProps: GetServerSideProps<{
     } catch (error) {
         // エラーが発生した場合の処理
         console.error(error);
-        return { props: { users: [] } };
+        return { notFound: true };
     }
 };
+
+const Users = ({ users }: { users: User[] }) => {
+    return (
+        <div>
+            <h1>Users List</h1>
+            <ul>
+                {/* ユーザーリストを表示。ユーザーデータごとにリストアイテムを作成 */}
+                {users.map((user) => (
+                    <li key={user.id}> {user.name} </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
+
+export default Users;
