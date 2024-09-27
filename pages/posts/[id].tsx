@@ -1,25 +1,56 @@
-// import { useRouter } from "next/router";
+import {
+    GetStaticPaths,
+    GetStaticProps,
+    InferGetServerSidePropsType,
+} from "next";
 
-// const Post = () => {
-//     const router = useRouter();
-//     const { id } = router.query;
+export const getStaticPaths: GetStaticPaths = async () => {
+    try {
+        //外部APIからデータを取得
+        const res = await fetch("https://jsonplaceholder.typicode.com/posts");
 
-//     return <p>Post ID: {id}</p>;
-// };
+        //レスポンスのステータスコードがエラーの時の対応
+        if (!res.ok) {
+            throw new Error(`Failed to fetch props , status: ${res.status}`);
+        }
 
-// export default Post;
+        //fetchしたdataをjson形式で取得
+        const posts: { id: number }[] = await res.json();
 
-export const getStaticPaths = async () => {
-    const res = await fetch("https://jsonplaceholder.typicode.com/posts");
-    const posts = await res.json();
+        const paths = posts.map((post) => ({
+            //`params` キーには、`id` という名前のパラメータを持つオブジェクトを指定
+            params: { id: post.id.toString() },
+        }));
 
-    //fetchで取得したデータを元に、URLパラメータを生成
-    const paths = posts.map((post) => ({
-        //`params` キーには、`id` という名前のパラメータを持つオブジェクトを指定
-        params: { id: post.id.toString() },
-    }));
+        return { paths, fallback: false };
+    } catch (error) {
+        console.error(error);
+        return { paths: [], fallback: false };
+    }
+};
 
-    //生成された全てのパスと、生成するパスが見つからない場合の処理を返す
-    return { paths, fallback: false };
-    // `fallback: false` は、`getStaticPaths` で返されたパス以外のリクエストを404ページにリダイレクト
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+    try {
+        //`params.id`を使って個別の投稿データを取得
+        const res = await fetch(
+            `https://jsonplaceholder.typicode.com/posts/${params?.id}`
+        );
+
+        //レスポンスのステータスコードがエラーの時の対応
+        if (!res.ok) {
+            throw new Error(`Failed to fetch props , status: ${res.status}`);
+        }
+
+        //fetchしたdataをjson形式で取得
+        const post: { id: number; title: string; body: string } =
+            await res.json();
+
+        //`props`としてコンポーネントにデータを渡す
+        return {
+            props: { post },
+        };
+    } catch (error) {
+        console.error(error);
+        return { notFound: true };
+    }
 };
