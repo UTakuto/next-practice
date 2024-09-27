@@ -1,8 +1,4 @@
-import {
-    GetStaticPaths,
-    GetStaticProps,
-    InferGetServerSidePropsType,
-} from "next";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 
 export const getStaticPaths: GetStaticPaths = async () => {
     try {
@@ -53,4 +49,15 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         console.error(error);
         return { notFound: true };
     }
+};
+
+const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
+    return (
+        <div>
+            {/* 投稿タイトル */}
+            <h1> {post.id} </h1>
+            {/* 投稿の本文 */}
+            <p> {post.body} </p>
+        </div>
+    );
 };
