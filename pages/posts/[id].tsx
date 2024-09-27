@@ -55,9 +55,11 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
     return (
         <div>
             {/* 投稿タイトル */}
-            <h1> {post.id} </h1>
+            <h1> {post.title} </h1>
             {/* 投稿の本文 */}
             <p> {post.body} </p>
         </div>
     );
 };
+
+export default Post;
